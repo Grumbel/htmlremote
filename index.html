@@ -1,0 +1,71 @@
+<!doctype html>
+<head>
+  <link href="/default.css" rel="stylesheet" type="text/css" />
+  <meta charset="utf-8" />
+</head>
+<body>
+  <h1>HTMLRemote</h1>
+
+  <section>
+    <div>
+      <h2>Volume</h2>
+      <form action="/service/volume" method="post" target="frame">
+        <button type="submit" name="action" value="5%+" id="volumeup">🔊</button>
+      </form>
+
+      <form action="/service/volume" method="post" target="frame">
+        <button type="submit" name="action" value="5%-">🔉</button>
+      </form>
+
+      <form action="/service/volume" method="post" target="frame">
+        <button type="submit" name="action" value="mute">🔇</button>
+      </form>
+    </div>
+  </section>
+
+  <section>
+    <div>
+      <h2>Gamma</h2>
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.5">Gamma Very High</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.25">Gamma High</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.00">Gamma Normal</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="0.9">Gamma Low</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <label for="action">Gamma:</label>
+        <input type="text" name="action" />
+      </form>
+    </div>
+  </section>
+
+  <section>
+    <div>
+      <h2>Screenshot</h2>
+      <form action="/service/screenshot" method="post">
+        <button type="submit" name="action" value="screenshot">Screenshot</button>
+      </form>
+    </div>
+  </section>
+
+  <section>
+    <h2>Web</h2>
+    <form action="/service/web" method="post" target="frame">
+      <label for="action">URL:</label>
+      <input type="text" name="action" style="width: 20em;" />
+    </form>
+  </section>
+
+  <br/>
+  <iframe name="frame"></iframe>
+</body>
