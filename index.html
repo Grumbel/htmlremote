@@ -10,15 +10,15 @@
     <div>
       <h2>Volume</h2>
       <form action="/service/volume" method="post" target="frame">
-        <button type="submit" name="action" value="5%+" id="volumeup">🔊</button>
+        <button class="button" type="submit" name="action" value="5%+" id="volumeup">🔊</button>
       </form>
 
       <form action="/service/volume" method="post" target="frame">
-        <button type="submit" name="action" value="5%-">🔉</button>
+        <button class="button" type="submit" name="action" value="5%-">🔉</button>
       </form>
 
       <form action="/service/volume" method="post" target="frame">
-        <button type="submit" name="action" value="mute">🔇</button>
+        <button class="button" type="submit" name="action" value="mute">🔇</button>
       </form>
     </div>
   </section>
@@ -27,21 +27,21 @@
     <div>
       <h2>Gamma</h2>
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.5">Gamma Very High</button>
+        <button type="submit" name="action" value="1.5">Very High</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.25">Gamma High</button>
+        <button type="submit" name="action" value="1.25">High</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.00">Gamma Normal</button>
+        <button type="submit" name="action" value="1.00">Normal</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="0.9">Gamma Low</button>
+        <button type="submit" name="action" value="0.9">Low</button>
       </form>
-
+      <br />
       <form action="/service/gamma" method="post" target="frame">
         <label for="action">Gamma:</label>
         <input type="text" name="action" />
@@ -64,6 +64,54 @@
       <label for="action">URL:</label>
       <input type="text" name="action" style="width: 20em;" />
     </form>
+  </section>
+
+  <section>
+    <h2>Keyboard</h2>
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">←</button>
+      <input class="button" type="hidden" name="key" value="Left" />
+    </form>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">↑</button>
+      <input class="button" type="hidden" name="key" value="Up" />
+    </form>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">↓</button>
+      <input class="button" type="hidden" name="key" value="Down" />
+    </form>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">→</button>
+      <input class="button" type="hidden" name="key" value="Right" />
+    </form>
+    <br/>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button type="submit" name="action" value="press">Space</button>
+      <input type="hidden" name="key" value="space" />
+    </form>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button type="submit" name="action" value="press">Alt+Tab</button>
+      <input type="hidden" name="key" value="alt+Tab" />
+    </form>
+    <br/>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">F</button>
+      <input type="hidden" name="key" value="f" />
+    </form>
+    <br />
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <label for="action">Key:</label>
+      <input type="hidden" name="action" value="press" />
+      <input type="text" name="key" style="width: 20em;" />
+    </form>
+
   </section>
 
   <br/>

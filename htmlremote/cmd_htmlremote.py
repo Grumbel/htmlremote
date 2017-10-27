@@ -90,6 +90,19 @@ class ScreenshotService:
         return lambda handler, pngdata=pngdata: result_callback(pngdata, handler)
 
 
+class KeyboardService:
+
+    def do(self, handler, data):
+        if (data[b'action'][0] == b'press'):
+            self.press(data[b'key'][0].decode())
+        else:
+            print("Unknown action: {}".format(data[b'action'][0]))
+
+    def press(self, key):
+        print("Pressing:", key)
+        subprocess.call(['xdotool', 'key', key])
+
+
 class MyHandler(BaseHTTPRequestHandler):
 
     def __init__(self, services, *args):
@@ -158,8 +171,13 @@ def main(argv):
         "/service/volume": VolumeService(),
         "/service/gamma": GammaService(),
         "/service/web": WebService(),
-        "/service/screenshot": ScreenshotService()
+        "/service/screenshot": ScreenshotService(),
+        "/service/keyboard": KeyboardService()
     }
+
+    print("Server listening on {}:{}".format(hostname, port))
+    for key, value in services.items():
+        print("  {}".format(key))
 
     httpd = HTTPServer((hostname, port), lambda *args: MyHandler(services, *args))
     # httpd.socket = ssl.wrap_socket (httpd.socket, certfile='server.pem', server_side=True)

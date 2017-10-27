@@ -4,13 +4,17 @@ body {
 
 h2 {
     font-family: sans;
-    margin: 0 0 1em 0;
+    margin: 0em;
     padding: 0em;
+}
+
+form {
+    display: inline-block;
 }
 
 button {
     background-color: #159;
-    margin: 16px;
+    margin: 8px;
     color: white;
     font-weight: bold;
     font-size: 1.5em;
@@ -22,9 +26,28 @@ button {
     border-radius: 4px;
     border-style: solid;
 
-    width: 10em;
+    width: 7em;
     height: 3em;
-    float: inline-block;
+}
+
+
+button.button {
+    background-color: #159;
+    margin: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-famimly: sans;
+    border: none;
+    border-width: 4px;
+
+    border-color: white darkgrey darkgrey white;
+    border-radius: 4px;
+    border-style: solid;
+
+    width: 3em;
+    height: 3em;
+    display: inline-block;
 }
 
 button:hover {
@@ -52,7 +75,6 @@ section {
 
     float: inline-block;
     margin: 32px;
-    width: 400px;
 }
 
 /* EOF */
