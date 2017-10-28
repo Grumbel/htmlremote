@@ -4,8 +4,12 @@ body {
 
 h2 {
     font-family: sans;
-    margin: 0em;
+    font-weight: normal;
+    font-size: 1em;
+    color: grey;
+    margin: 0em 0em 0.5em 0em;
     padding: 0em;
+    text-align: center;
 }
 
 form {
@@ -63,7 +67,6 @@ button:active {
 }
 
 section {
-    float: left;
     padding: 8px 32px 16px 32px;
 
     border-width: 1px;
@@ -73,7 +76,8 @@ section {
 
     background: white;
 
-    float: inline-block;
+    display: inline-block;
+    vertical-align: middle;
     margin: 32px;
 }
 
