@@ -18,10 +18,12 @@
 
 
 import argparse
+import os
 import ssl
 import sys
 import socketserver
 import subprocess
+import xdg.BaseDirectory
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -158,6 +160,8 @@ def parse_args(args):
     parser = argparse.ArgumentParser(description="HTML-based remote control")
     parser.add_argument("-p", "--port", type=int, default=9999,
                         help="Port to run the http server on")
+    parser.add_argument("--no-ssl", action='store_true', default=False,
+                        help="Disable SSL support")
     return parser.parse_args(args)
 
 
@@ -166,6 +170,10 @@ def main(argv):
 
     hostname = ''
     port = args.port
+
+    cfg_path = os.path.join(xdg.BaseDirectory.xdg_config_home, "htmlremote")
+    if not os.path.exists(cfg_path):
+        os.makedirs(cfg_path)
 
     services = {
         "/service/volume": VolumeService(),
@@ -182,9 +190,24 @@ def main(argv):
     httpd = HTTPServer((hostname, port), lambda *args: MyHandler(services, *args))
     # httpd.socket = ssl.wrap_socket (httpd.socket, certfile='server.pem', server_side=True)
     # openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
+
+    if not args.no_ssl:
+        certfile = os.path.join(cfg_path, "cert.pem")
+        if not os.path.exists(certfile):
+            print("Generating SSL certificate...")
+            subprocess.check_call(["openssl", "req",
+                                   "-new", "-x509",
+                                   "-nodes",
+                                   "-days", "9999",
+                                   "-subj", "/CN=localdomain/O=HTMLRemote/C=US",
+                                   "-keyout", certfile,
+                                   "-out", certfile])
+        httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile=certfile)
+
     # https://gist.github.com/fxsjy/5465353
     # https://github.com/tianhuil/SimpleHTTPAuthServer/blob/master/SimpleHTTPAuthServer/__main__.py
 
+    print("Launching server")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
