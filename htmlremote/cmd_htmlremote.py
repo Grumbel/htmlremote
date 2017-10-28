@@ -18,6 +18,7 @@
 
 
 import argparse
+import base64
 import os
 import ssl
 import sys
@@ -26,9 +27,6 @@ import subprocess
 import xdg.BaseDirectory
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
-# Web frameworks:
-# Flask
 
 
 class Service:
@@ -107,8 +105,9 @@ class KeyboardService:
 
 class MyHandler(BaseHTTPRequestHandler):
 
-    def __init__(self, services, *args):
+    def __init__(self, services, auth_token, *args):
         self.services = services
+        self.auth_token = auth_token
         super().__init__(*args)
 
     def do_HEAD(self):
@@ -117,6 +116,22 @@ class MyHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        if self.auth_token:
+            if self.headers['Authorization'] == ("Basic " + self.auth_token):
+                self.do_GET_authorized()
+            else:
+                self.do_GET_rejected()
+                print("Authorization failed:", self.headers['Authorization'], "!=", self.auth_token)
+        else:
+            self.do_GET_authorized()
+
+    def do_GET_rejected(self):
+        self.send_response(401)
+        self.send_header('WWW-Authenticate', 'Basic realm="htmlremote"')
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+    def do_GET_authorized(self):
         print("-> '{}'".format(self.path))
         self.send_response(200)
 
@@ -138,6 +153,16 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(content, 'UTF-8'))
 
     def do_POST(self):
+        if self.auth_token:
+            if self.headers['Authorization'] == ("Basic " + self.auth_token):
+                self.do_POST_authorized()
+            else:
+                self.do_GET_rejected()
+                print("Authorization failed:", self.headers['Authorization'], "!=", self.auth_token)
+        else:
+            self.do_POST_authorized()
+
+    def do_POST_authorized(self):
         service = self.services[self.path]
 
         content_length = int(self.headers['Content-Length'])
@@ -156,13 +181,21 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes("Success", 'UTF-8'))
 
 
-def parse_args(args):
+def parse_args(argv):
     parser = argparse.ArgumentParser(description="HTML-based remote control")
     parser.add_argument("-p", "--port", type=int, default=9999,
                         help="Port to run the http server on")
     parser.add_argument("--no-ssl", action='store_true', default=False,
                         help="Disable SSL support")
-    return parser.parse_args(args)
+    parser.add_argument("--no-auth", action='store_true', default=False,
+                        help="Disable authentification")
+    parser.add_argument("-a", "--auth", metavar="USER:PASSWORD", type=str, default=None,
+                        help="Require USER and PASSWORD to access the htmlremote")
+
+    args = parser.parse_args(argv)
+    if args.auth is None and not args.no_auth:
+        raise Exception("--auth argument required")
+    return args
 
 
 def main(argv):
@@ -187,9 +220,12 @@ def main(argv):
     for key, value in services.items():
         print("  {}".format(key))
 
-    httpd = HTTPServer((hostname, port), lambda *args: MyHandler(services, *args))
-    # httpd.socket = ssl.wrap_socket (httpd.socket, certfile='server.pem', server_side=True)
-    # openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
+    httpd = HTTPServer((hostname, port), lambda *args: MyHandler(services, auth_token, *args))
+
+    if args.no_auth:
+        auth_token = None
+    else:
+        auth_token = base64.b64encode(args.auth.encode()).decode()
 
     if not args.no_ssl:
         certfile = os.path.join(cfg_path, "cert.pem")
@@ -203,9 +239,6 @@ def main(argv):
                                    "-keyout", certfile,
                                    "-out", certfile])
         httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile=certfile)
-
-    # https://gist.github.com/fxsjy/5465353
-    # https://github.com/tianhuil/SimpleHTTPAuthServer/blob/master/SimpleHTTPAuthServer/__main__.py
 
     print("Launching server")
     try:
