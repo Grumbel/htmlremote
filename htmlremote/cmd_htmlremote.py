@@ -27,6 +27,7 @@ import subprocess
 import xdg.BaseDirectory
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pkg_resources import Requirement, resource_filename
 
 
 class Service:
@@ -139,16 +140,21 @@ class MyHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/css')
             self.end_headers()
             print("Sending CSS")
+
+            filename = resource_filename(Requirement.parse("htmlremote"), "default.css")
+
             content = ""
-            with open("default.css") as fin:
+            with open(filename) as fin:
                 content = fin.read()
             self.wfile.write(bytes(content, 'UTF-8'))
         else:
             self.send_header('Content-type', 'text/html')
             self.end_headers()
 
+            filename = resource_filename(Requirement.parse("htmlremote"), "index.html")
+
             content = ""
-            with open("index.html") as fin:
+            with open(filename) as fin:
                 content = fin.read()
             self.wfile.write(bytes(content, 'UTF-8'))
 
@@ -190,7 +196,7 @@ def parse_args(argv):
     parser.add_argument("--no-auth", action='store_true', default=False,
                         help="Disable authentification")
     parser.add_argument("-a", "--auth", metavar="USER:PASSWORD", type=str, default=None,
-                        help="Require USER and PASSWORD to access the htmlremote")
+                        help="Require USER and PASSWORD to access the htmlremote website")
 
     args = parser.parse_args(argv)
     if args.auth is None and not args.no_auth:

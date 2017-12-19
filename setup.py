@@ -29,7 +29,9 @@ setup(name='htmlremote',
           ],
           'gui_scripts': []
           },
-      packages=['htmlremote'])
+      packages=['htmlremote'],
+      package_data={'htmlremote': ['index.html', 'default.css']}
+)
 
 
 # EOF #
