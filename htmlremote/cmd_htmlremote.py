@@ -193,15 +193,14 @@ def parse_args(argv):
                         help="Port to run the http server on")
     parser.add_argument("--no-ssl", action='store_true', default=False,
                         help="Disable SSL support")
-    parser.add_argument("--no-auth", action='store_true', default=False,
+
+    auth = parser.add_mutually_exclusive_group(required=True)
+    auth.add_argument("--no-auth", action='store_true', default=False,
                         help="Disable authentification")
-    parser.add_argument("-a", "--auth", metavar="USER:PASSWORD", type=str, default=None,
+    auth.add_argument("-a", "--auth", metavar="USER:PASSWORD", type=str, default=None,
                         help="Require USER and PASSWORD to access the htmlremote website")
 
-    args = parser.parse_args(argv)
-    if args.auth is None and not args.no_auth:
-        raise Exception("--auth argument required")
-    return args
+    return parser.parse_args(argv)
 
 
 def main(argv):
