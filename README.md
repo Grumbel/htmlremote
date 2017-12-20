@@ -21,6 +21,26 @@ Usage
                             Require USER and PASSWORD to access the htmlremote
                             website
 
+Requirements
+------------
+
+htmlremote makes use of numerous command line applications to accive
+it's functionality.
+
+* OpenSSL
+* xdotool
+* xwd
+* covert
+* amixer
+
+Features
+--------
+
+* screenshot
+* keyboard input
+* gamma setting
+* volume control
+
 Screenshot
 ----------
 ![ScreenShot](https://raw.github.com/Grumbel/htmlremote/master/screenshot.png)
