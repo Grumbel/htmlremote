@@ -34,6 +34,15 @@ class Service:
     pass
 
 
+class ExecService:
+
+    def do(self, handler, data):
+        self.execute(data[b'action'][0].decode())
+
+    def execute(self, cmdline):
+        subprocess.Popen(cmdline, shell=True)
+
+
 class VolumeService:
 
     def __init__(self):
@@ -218,7 +227,8 @@ def main(argv):
         "/service/gamma": GammaService(),
         "/service/web": WebService(),
         "/service/screenshot": ScreenshotService(),
-        "/service/keyboard": KeyboardService()
+        "/service/keyboard": KeyboardService(),
+        "/service/exec": ExecService()
     }
 
     print("Server listening on {}:{}".format(hostname, port))
