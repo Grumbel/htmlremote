@@ -27,7 +27,7 @@ import subprocess
 import xdg.BaseDirectory
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pkg_resources import Requirement, resource_filename
+from pkg_resources import Requirement, resource_stream
 
 
 class Service:
@@ -150,22 +150,16 @@ class MyHandler(BaseHTTPRequestHandler):
             self.end_headers()
             print("Sending CSS")
 
-            filename = resource_filename(Requirement.parse("htmlremote"), "default.css")
-
-            content = ""
-            with open(filename) as fin:
+            with resource_stream("htmlremote", "default.css") as fin:
                 content = fin.read()
-            self.wfile.write(bytes(content, 'UTF-8'))
+                self.wfile.write(content)
         else:
             self.send_header('Content-type', 'text/html')
             self.end_headers()
 
-            filename = resource_filename(Requirement.parse("htmlremote"), "index.html")
-
-            content = ""
-            with open(filename) as fin:
+            with resource_stream("htmlremote", "index.html") as fin:
                 content = fin.read()
-            self.wfile.write(bytes(content, 'UTF-8'))
+                self.wfile.write(content)
 
     def do_POST(self):
         if self.auth_token:
