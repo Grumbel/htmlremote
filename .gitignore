@@ -2,3 +2,4 @@
 *.pem
 *.pyc
 /htmlremote.egg-info/
+__pycache__/
