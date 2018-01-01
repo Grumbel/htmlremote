@@ -6,50 +6,51 @@
   <!-- prevent zoom on mobile devices, thus making it easier to press
        buttons multiple times without accidentally triggering a zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" />
+  <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
   <section>
-    <div>
-      <h2>Volume</h2>
+    <h2>Volume</h2>
 
-      <form action="/service/volume" method="post" target="frame">
-        <button class="button" type="submit" name="action" value="mute">🔇</button>
-      </form>
+    <form action="/service/volume" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="mute">🔇</button>
+    </form>
 
-      <form action="/service/volume" method="post" target="frame">
-        <button class="button" type="submit" name="action" value="5%-">🔉</button>
-      </form>
+    <form action="/service/volume" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="5%-">🔉</button>
+    </form>
 
-      <form action="/service/volume" method="post" target="frame">
-        <button class="button" type="submit" name="action" value="5%+" id="volumeup">🔊</button>
-      </form>
-    </div>
+    <form action="/service/volume" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="5%+" id="volumeup">🔊</button>
+    </form>
+    <br/>
+    <form action="/service/volume" method="post" target="frame" style="width: 100%;">
+      <input type="range" min="0" max="100" value="50" class="slider" id="volumeslider" style="width: 100%;" />
+    </form>
   </section>
 
   <section>
-    <div>
-      <h2>Gamma</h2>
-      <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.5">1.5</button>
-      </form>
+    <h2>Gamma</h2>
+    <form action="/service/gamma" method="post" target="frame">
+      <button type="submit" name="action" value="1.5" class="button">1.5</button>
+    </form>
 
-      <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.25">1.25</button>
-      </form>
+    <form action="/service/gamma" method="post" target="frame">
+      <button type="submit" name="action" value="1.25" class="button">1.25</button>
+    </form>
 
-      <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.00">1.00</button>
-      </form>
+    <form action="/service/gamma" method="post" target="frame">
+      <button type="submit" name="action" value="1.00" class="button">1.00</button>
+    </form>
 
-      <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="0.9">0.9</button>
-      </form>
-      <br />
-      <form action="/service/gamma" method="post" target="frame">
-        <label for="action">Gamma:</label>
-        <input type="text" name="action" />
-      </form>
-    </div>
+    <form action="/service/gamma" method="post" target="frame">
+      <button type="submit" name="action" value="0.9" class="button">0.9</button>
+    </form>
+    <br />
+    <form action="/service/gamma" method="post" target="frame">
+      <label for="action">Gamma:</label>
+      <input type="text" name="action" />
+    </form>
   </section>
 
   <section>
@@ -90,6 +91,16 @@
       <button class="button" type="submit" name="action" value="press">F</button>
       <input type="hidden" name="key" value="f" />
     </form>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">F11</button>
+      <input type="hidden" name="key" value="F11" />
+    </form>
+
+    <form action="/service/keyboard" method="post" target="frame">
+      <button class="button" type="submit" name="action" value="press">Esc</button>
+      <input type="hidden" name="key" value="Esc" />
+    </form>
     <br />
 
     <form action="/service/keyboard" method="post" target="frame">
@@ -100,27 +111,25 @@
   </section>
 
   <section>
-    <div>
-      <h2>Screenshot</h2>
-      <form action="/service/screenshot" method="post">
-        <button type="submit" name="action" value="screenshot">Screenshot</button>
-      </form>
-    </div>
+    <h2>Screenshot</h2>
+    <form action="/service/screenshot" method="post">
+      <button type="submit" name="action" value="screenshot">Screenshot</button>
+    </form>
   </section>
 
   <section>
     <h2>Web</h2>
-    <form action="/service/web" method="post" target="frame">
-      <label for="action">URL:</label>
-      <input type="text" name="action" style="width: 20em;" />
+    <form action="/service/web" method="post" target="frame" style="width: 100%;">
+      <!-- <label for="action">URL:</label><br/> -->
+      <input type="text" name="action" style="width: 100%;" />
     </form>
   </section>
 
   <section>
     <h2>Exec</h2>
-    <form action="/service/exec" method="post" target="frame">
-      <label for="action">Command:</label>
-      <input type="text" name="action" style="width: 20em;" />
+    <form action="/service/exec" method="post" target="frame" style="width: 100%;">
+      <!-- <label for="action">Command:</label> -->
+      <input type="text" name="action" style="width: 100%;" />
     </form>
   </section>
 
