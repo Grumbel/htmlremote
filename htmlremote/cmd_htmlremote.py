@@ -153,6 +153,13 @@ class MyHandler(BaseHTTPRequestHandler):
             with resource_stream("htmlremote", "default.css") as fin:
                 content = fin.read()
                 self.wfile.write(content)
+        elif self.path == "/script.js":
+            self.send_header('Content-type', 'application/javascript')
+            self.end_headers()
+
+            with resource_stream("htmlremote", "script.js") as fin:
+                content = fin.read()
+                self.wfile.write(content)
         else:
             self.send_header('Content-type', 'text/html')
             self.end_headers()
