@@ -1,5 +1,7 @@
-*~
 *.pem
 *.pyc
+*~
 /htmlremote.egg-info/
+/htmlremote/.sass-cache/
+/htmlremote/default.css.map
 __pycache__/
