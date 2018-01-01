@@ -12,21 +12,23 @@
   <section>
     <h2>Volume</h2>
 
-    <form action="/service/volume" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="mute">🔇</button>
-    </form>
+    <div class="controls">
+      <form action="/service/volume" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="mute">🔇</button>
+      </form>
 
-    <form action="/service/volume" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="5%-">🔉</button>
-    </form>
+      <form>
+        <button class="button" type="button" name="action" value="5%-" id="volumedown">🔉</button>
+      </form>
 
-    <form action="/service/volume" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="5%+" id="volumeup">🔊</button>
-    </form>
-    <br/>
-    <form action="/service/volume" method="post" target="frame" style="width: 100%;">
-      <input type="range" min="0" max="100" value="50" class="slider" id="volumeslider" style="width: 100%;" />
-    </form>
+      <form>
+        <button class="button" type="button" name="action" value="5%+" id="volumeup">🔊</button>
+      </form>
+
+      <form action="/service/volume" method="post" target="frame" style="width: 45%;">
+        <input type="range" min="0" max="100" value="50" class="slider" id="volumeslider" style="width: 100%;" />
+      </form>
+    </div>
   </section>
 
   <section>

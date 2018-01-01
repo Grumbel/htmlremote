@@ -2,7 +2,7 @@ let g_volume_value: number = 50;
 let g_volume_next_value: number = 50;
 let g_volume_timeout: number | null = null;
 
-function volume_set_instantly(value)
+function volume_set_instantly(value: number)
 {
     if (g_volume_value !== value)
     {
@@ -18,14 +18,26 @@ function volume_set_instantly(value)
 
 function volume_timeout()
 {
-    volume_set_instantly(g_volume_value);
-    g_volume_value = g_volume_next_value;
+    volume_set_instantly(g_volume_next_value);
     g_volume_timeout = null;
 }
 
-function volume_set(value)
+function volume_set(value: number)
 {
+    if (value < 0)
+    {
+        value = 0;
+    }
+    else if (value > 100)
+    {
+        value = 100;
+    }
+
     g_volume_next_value = value;
+
+    let volumeslider = (<HTMLInputElement> document.getElementById("volumeslider"));
+    volumeslider.value = value.toString();
+
     if (g_volume_timeout == null)
     {
         volume_set_instantly(g_volume_next_value);
