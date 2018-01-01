@@ -67,53 +67,65 @@
 
   <section>
     <h2>Keyboard</h2>
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">←</button>
-      <input class="button" type="hidden" name="key" value="Left" />
-    </form>
+    <div id="keyboard">
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">←</button>
+        <input class="button" type="hidden" name="key" value="Left" />
+      </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">↑</button>
-      <input class="button" type="hidden" name="key" value="Up" />
-    </form>
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">↑</button>
+        <input class="button" type="hidden" name="key" value="Up" />
+      </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">↓</button>
-      <input class="button" type="hidden" name="key" value="Down" />
-    </form>
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">↓</button>
+        <input class="button" type="hidden" name="key" value="Down" />
+      </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">→</button>
-      <input class="button" type="hidden" name="key" value="Right" />
-    </form>
-    <br/>
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">→</button>
+        <input class="button" type="hidden" name="key" value="Right" />
+      </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button type="submit" name="action" value="press">Space</button>
-      <input type="hidden" name="key" value="space" />
-    </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button type="submit" name="action" value="press">Alt+Tab</button>
-      <input type="hidden" name="key" value="alt+Tab" />
-    </form>
-    <br/>
+      <form action="/service/keyboard" method="post" target="frame">
+        <button type="submit" name="action" value="press">Space</button>
+        <input type="hidden" name="key" value="space" />
+      </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">F</button>
-      <input type="hidden" name="key" value="f" />
-    </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">F11</button>
-      <input type="hidden" name="key" value="F11" />
-    </form>
+      <form action="/service/keyboard" method="post" target="frame">
+        <button type="submit" name="action" value="press">Return</button>
+        <input type="hidden" name="key" value="Return" />
+      </form>
 
-    <form action="/service/keyboard" method="post" target="frame">
-      <button class="button" type="submit" name="action" value="press">Esc</button>
-      <input type="hidden" name="key" value="Esc" />
-    </form>
-    <br />
+      <form action="/service/keyboard" method="post" target="frame">
+        <button type="submit" name="action" value="press">Alt+Tab</button>
+        <input type="hidden" name="key" value="alt+Tab" />
+      </form>
+
+
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">F</button>
+        <input type="hidden" name="key" value="f" />
+      </form>
+
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">F11</button>
+        <input type="hidden" name="key" value="F11" />
+      </form>
+
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">BackSpace</button>
+        <input type="hidden" name="key" value="BackSpace" />
+      </form>
+
+      <form action="/service/keyboard" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="press">Esc</button>
+        <input type="hidden" name="key" value="Esc" />
+      </form>
+    </div>
 
     <form action="/service/keyboard" method="post" target="frame">
       <label for="action">Key:</label>
@@ -144,10 +156,5 @@
       <input type="text" name="action" style="width: 100%;" />
     </form>
   </section>
-
-  <br/>
   <iframe name="frame"></iframe>
-
-  <br/>
-  <p>Generated by HTMLRemote</p>
 </body>
