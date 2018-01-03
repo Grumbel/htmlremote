@@ -1,3 +1,4 @@
+"use strict";
 var g_volume_value = 50;
 var g_volume_next_value = 50;
 var g_volume_timeout = null;
@@ -106,4 +107,3 @@ window.onload = function () {
         make_key_newline();
     }
 };
-/* EOF */
