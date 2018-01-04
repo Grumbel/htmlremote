@@ -251,6 +251,16 @@ class KeyboardService(Service):
                             make_key(key[1], key[0])
                     doc.stag("br")
 
+            doc.stag("br")
+
+            with tag("form", action="/service/keyboard", method="post", target="frame"):
+                with tag("label"):
+                    doc.attr(('for', 'action'))
+                    text("Key: ")
+
+                doc.stag("input", type="hidden", name="action", value="press")
+                doc.stag("input", type="text", name="key", style="width: 20em;")
+
 
 class MyHandler(BaseHTTPRequestHandler):
 
