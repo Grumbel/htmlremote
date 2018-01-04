@@ -46,3 +46,8 @@ Screenshot
 ----------
 ![ScreenShot](https://raw.github.com/Grumbel/htmlremote/master/screenshot.png)
 
+Bugs
+----
+
+The webrowser will report the SSL certificates as invalid, as it is
+self-signed.
