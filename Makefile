@@ -17,7 +17,7 @@
 SOURCES := $(wildcard \
   htmlremote/*.py)
 
-all: flake test # autopep
+all: htmlremote/script.js htmlremote/default.css
 
 autopep:
 	autopep8  --max-line=120  --in-place $(SOURCES)
@@ -42,6 +42,25 @@ clean:
 
 install:
 	sudo -H pip3 install --force-reinstall --ignore-installed --no-deps .
+
+%.js: %.ts Makefile
+	tsc --removeComments\
+	    --strictNullChecks \
+	    --strict \
+	    --alwaysStrict \
+	    --forceConsistentCasingInFileNames \
+	    --noImplicitReturns \
+	    --noImplicitAny \
+	    --noFallthroughCasesInSwitch \
+	    --noEmitOnError \
+	    --noImplicitThis \
+	    --noUnusedLocals \
+	    --noUnusedParameters \
+	    --outFile $@ \
+            $<
+
+%.css: %.scss
+	sass $< $@
 
 .PHONY: all autopep flake test flake pylint clean install
 
