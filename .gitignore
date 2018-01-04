@@ -5,3 +5,4 @@
 /htmlremote/.sass-cache/
 /htmlremote/default.css.map
 __pycache__/
+/.pylint/
