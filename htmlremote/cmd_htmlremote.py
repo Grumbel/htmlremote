@@ -57,6 +57,7 @@ class ExecService(Service):
     </form>
   </section>""")
 
+
 class VolumeService(Service):
 
     def __init__(self):
@@ -110,27 +111,27 @@ class GammaService(Service):
     <h2>Gamma</h2>
     <div class="controls">
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.75" class="smallbutton">1.75</button>
+        <button type="submit" name="action" value="1.75" class="button">1.75</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.5" class="smallbutton">1.5</button>
+        <button type="submit" name="action" value="1.5" class="button">1.5</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.25" class="smallbutton">1.25</button>
+        <button type="submit" name="action" value="1.25" class="button">1.25</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="1.00" class="smallbutton">1.00</button>
+        <button type="submit" name="action" value="1.00" class="button">1.00</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="0.9" class="smallbutton">0.9</button>
+        <button type="submit" name="action" value="0.9" class="button">0.9</button>
       </form>
 
       <form action="/service/gamma" method="post" target="frame">
-        <button type="submit" name="action" value="0.9" class="smallbutton">0.75</button>
+        <button type="submit" name="action" value="0.9" class="button">0.75</button>
       </form>
     </div>
 
@@ -176,7 +177,6 @@ class ScreenshotService(Service):
 
         return lambda handler, pngdata=pngdata: result_callback(pngdata, handler)
 
-
     def html(self, doc):
         doc.asis(
 """<section>
@@ -185,6 +185,7 @@ class ScreenshotService(Service):
       <button type="submit" name="action" value="screenshot">Screenshot</button>
     </form>
   </section>""")
+
 
 class KeyboardService(Service):
 
@@ -217,14 +218,12 @@ class KeyboardService(Service):
                 btn("↓", "Down")
                 btn("→", "Right")
                 btn("→", "Right")
-
-                btn("Space", "space")
-                btn("Return", "Return")
+                doc.stag("br")
+                btn("Esc", "Esc")
                 btn("Alt+Tab", "alt+Tab")
                 btn("F", "f")
                 btn("F11", "F11")
-                btn("BkSp", "BackSpace")
-                btn("Esc", "Esc")
+                btn("BackSpace", "BackSpace")
 
             # Full keyboard
             with tag('section'):
@@ -251,6 +250,8 @@ class KeyboardService(Service):
                             make_key(key[1], key[0])
                     doc.stag("br")
 
+            btn("Space", "space")
+            btn("Return", "Return")
             doc.stag("br")
 
             with tag("form", action="/service/keyboard", method="post", target="frame"):
@@ -397,8 +398,8 @@ def main(argv):
     services = {
         "/service/volume": VolumeService(),
         "/service/gamma": GammaService(),
-        "/service/screenshot": ScreenshotService(),
         "/service/keyboard": KeyboardService(),
+        "/service/screenshot": ScreenshotService(),
         "/service/web": WebService(),
         "/service/exec": ExecService()
     }

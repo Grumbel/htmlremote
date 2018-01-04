@@ -25,7 +25,7 @@ button {
     margin: 8px;
     color: white;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1em;
     font-famimly: sans;
     border: none;
     border-width: 4px;
@@ -36,44 +36,37 @@ button {
 
     flex: 1;
 
+    min-width: 3em;
     height: 3em;
 }
 
 
 .keyboardbutton {
     border-width: thin;
-    border-color: lightgrey;
-    border-radius: 0;
-    margin: 0;
-    font-size: 1em;
+    border-color: darkgrey;
+    background-color: lightgrey;
+    color: black;
+    border-radius: 2px;
+    margin: 2px;
+    font-size: 0.9em;
     width: 3em;
     height: 3em;
 }
 
-button.button {
-    width: 3em;
-    height: 3em;
-    display: inline-block;
-    flex: 1;
+.keyboardbutton:hover {
+    background-color: white;
 }
 
-button.smallbutton {
-    width: 3em;
-    height: 1.75em;
-    display: inline-block;
-    flex: 1;
+.keyboardbutton:active {
+    border-color: darkgrey white white darkgrey;
 }
 
 button:hover {
-    color: blue;
-    border-radius: 8px;
-    border-style: solid;
+    background-color: blue;
 }
 
 button:active {
     border-color: darkgrey white white darkgrey;
-    border-radius: 8px;
-    border-style: solid;
 }
 
 section {
