@@ -28,13 +28,19 @@ import xdg.BaseDirectory
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pkg_resources import Requirement, resource_stream
+import yattag
 
 
 class Service:
-    pass
+
+    def do(self, handler, data):
+        pass
+
+    def html(self, doc):
+        pass
 
 
-class ExecService:
+class ExecService(Service):
 
     def do(self, handler, data):
         self.execute(data[b'action'][0].decode())
@@ -42,14 +48,21 @@ class ExecService:
     def execute(self, cmdline):
         subprocess.Popen(cmdline, shell=True)
 
+    def html(self, doc):
+        doc.asis("""  <section>
+    <h2>Exec</h2>
+    <form action="/service/exec" method="post" target="frame" style="width: 100%;">
+      <!-- <label for="action">Command:</label> -->
+      <input type="text" name="action" style="width: 100%;" />
+    </form>
+  </section>""")
 
-class VolumeService:
+class VolumeService(Service):
 
     def __init__(self):
         pass
 
     def do(self, handler, data):
-        print(data)
         if data[b'action'][0] == b"mute":
             self.mute()
         else:
@@ -61,8 +74,30 @@ class VolumeService:
     def adjust(self, value):
         subprocess.call(["amixer", "-D", "pulse", "set", "Master", value])
 
+    def html(self, doc):
+        doc.asis("""  <section>
+    <h2>Volume</h2>
 
-class GammaService:
+    <div class="controls">
+      <form action="/service/volume" method="post" target="frame">
+        <button class="button" type="submit" name="action" value="mute">🔇</button>
+      </form>
+
+      <form>
+        <button class="button" type="button" name="action" value="5%-" id="volumedown">🔉</button>
+      </form>
+
+      <form>
+        <button class="button" type="button" name="action" value="5%+" id="volumeup">🔊</button>
+      </form>
+
+      <form action="/service/volume" method="post" target="frame" style="width: 45%;">
+        <input type="range" min="0" max="100" value="50" class="slider" id="volumeslider" style="width: 100%;" />
+      </form>
+    </div>
+  </section>""")
+
+class GammaService(Service):
 
     def do(self, handler, data):
         self.gamma(data[b'action'][0].decode())
@@ -70,8 +105,42 @@ class GammaService:
     def gamma(self, value):
         subprocess.call(["xgamma", "-gamma", value])
 
+    def html(self, doc):
+        doc.asis("""  <section>
+    <h2>Gamma</h2>
+    <div class="controls">
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.75" class="smallbutton">1.75</button>
+      </form>
 
-class WebService:
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.5" class="smallbutton">1.5</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.25" class="smallbutton">1.25</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="1.00" class="smallbutton">1.00</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="0.9" class="smallbutton">0.9</button>
+      </form>
+
+      <form action="/service/gamma" method="post" target="frame">
+        <button type="submit" name="action" value="0.9" class="smallbutton">0.75</button>
+      </form>
+    </div>
+
+    <form action="/service/gamma" method="post" target="frame">
+      <label for="action">Gamma:</label>
+      <input type="text" name="action" />
+    </form>
+  </section>""")
+
+class WebService(Service):
 
     def do(self, handler, data):
         self.open_url(data[b'action'][0].decode())
@@ -79,8 +148,17 @@ class WebService:
     def open_url(self, url):
         subprocess.Popen(["firefox", url])
 
+    def html(self, doc):
+        doc.asis("""  <section>
+    <h2>Web</h2>
+    <form action="/service/web" method="post" target="frame" style="width: 100%;">
+      <!-- <label for="action">URL:</label><br/> -->
+      <input type="text" name="action" style="width: 100%;" />
+    </form>
+  </section>""")
 
-class ScreenshotService:
+
+class ScreenshotService(Service):
 
     def do(self, handler, data):
         return self.screenshot(handler)
@@ -89,7 +167,6 @@ class ScreenshotService:
         cmd = 'DISPLAY=:0 xwd -silent -root | convert "XWD:-" "PNG:-"'
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
         pngdata = result.stdout
-        print(len(pngdata))
 
         def result_callback(pngdata, handler):
             handler.send_response(200)
@@ -100,7 +177,16 @@ class ScreenshotService:
         return lambda handler, pngdata=pngdata: result_callback(pngdata, handler)
 
 
-class KeyboardService:
+    def html(self, doc):
+        doc.asis(
+"""<section>
+    <h2>Screenshot</h2>
+    <form action="/service/screenshot" method="post">
+      <button type="submit" name="action" value="screenshot">Screenshot</button>
+    </form>
+  </section>""")
+
+class KeyboardService(Service):
 
     def do(self, handler, data):
         if (data[b'action'][0] == b'press'):
@@ -111,6 +197,59 @@ class KeyboardService:
     def press(self, key):
         print("Pressing:", key)
         subprocess.call(['xdotool', 'key', key])
+
+    def html(self, doc):
+        _, tag, text = doc.tagtext()
+
+        def btn(label, key):
+            with tag("form", action="/service/keyboard", method="post", target="frame"):
+                with tag("button", klass="button", type="submit", name="action", value="press"):
+                    text(label)
+                doc.stag("input", klass="button", type="hidden", name="key", value=key)
+
+        with tag('section'):
+            with tag("h2"):
+                text("Keyboard")
+            # Frequently used buttons
+            with tag('section'):
+                btn("←", "Left")
+                btn("↑", "Up")
+                btn("↓", "Down")
+                btn("→", "Right")
+                btn("→", "Right")
+
+                btn("Space", "space")
+                btn("Return", "Return")
+                btn("Alt+Tab", "alt+Tab")
+                btn("F", "f")
+                btn("F11", "F11")
+                btn("BkSp", "BackSpace")
+                btn("Esc", "Esc")
+
+            # Full keyboard
+            with tag('section'):
+                keys = [
+                    ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"],
+                    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ["minus", "-"], ["equal", "="]],
+                    ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", ["bracketleft", "["], ["bracketright", "]"]],
+                    ["a", "s", "d", "f", "g", "h", "j", "k", "l", ["semicolon", ";"], ["apostrophe", "'"]],
+                    ["z", "x", "c", "v", "b", "n", "m", ["comma", ","], ["period", "."], ["slash", "/"], ["backslash", "\\"]],
+                ]
+
+                def make_key(label, key):
+                    with tag("form", action="/service/keyboard", method="post", target="frame"):
+                        with tag("button", klass="keyboardbutton", type="submit", name="action", value="press"):
+                            text(label)
+                        with tag("input", type="hidden", name="key", value=key):
+                            pass
+
+                for row in keys:
+                    for key in row:
+                        if isinstance(key, str):
+                            make_key(key, key)
+                        else:
+                            make_key(key[1], key[0])
+                    doc.stag("br")
 
 
 class MyHandler(BaseHTTPRequestHandler):
@@ -164,9 +303,8 @@ class MyHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
             self.end_headers()
 
-            with resource_stream("htmlremote", "index.html") as fin:
-                content = fin.read()
-                self.wfile.write(content)
+            content = make_html(self.services).encode("UTF-8")
+            self.wfile.write(content)
 
     def do_POST(self):
         if self.auth_token:
@@ -213,6 +351,29 @@ def parse_args(argv):
     return parser.parse_args(argv)
 
 
+def make_html(services):
+    doc, tag, text = yattag.Doc().tagtext()
+
+    doc.asis("<!doctype html>")
+    with tag("head"):
+        with tag("title"): text("HTMLRemote")
+        doc.stag("link", href="default.css", rel="stylesheet", type="text/css")
+        doc.stag("meta", charset="utf-8")
+        # prevent zoom on mobile devices, thus making it easier to press
+        # buttons multiple times without accidentally triggering a zoom
+        doc.stag("meta", name="viewport",
+                 content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0")
+        with tag("script", type="text/javascript", src="script.js"): pass
+
+    for name, service in services.items():
+        service.html(doc)
+
+    with tag("iframe", name="frame"):
+        pass
+
+    return doc.getvalue()
+
+
 def main(argv):
     args = parse_args(argv[1:])
 
@@ -226,9 +387,9 @@ def main(argv):
     services = {
         "/service/volume": VolumeService(),
         "/service/gamma": GammaService(),
-        "/service/web": WebService(),
         "/service/screenshot": ScreenshotService(),
         "/service/keyboard": KeyboardService(),
+        "/service/web": WebService(),
         "/service/exec": ExecService()
     }
 

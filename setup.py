@@ -30,7 +30,7 @@ setup(name='htmlremote',
           'gui_scripts': []
           },
       packages=['htmlremote'],
-      package_data={'htmlremote': ['index.html', 'default.css', 'script.js']}
+      package_data={'htmlremote': ['default.css', 'script.js']}
 )
 
 
