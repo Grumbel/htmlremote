@@ -22,12 +22,12 @@ import base64
 import os
 import ssl
 import sys
-import socketserver
 import subprocess
-import xdg.BaseDirectory
-from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pkg_resources import Requirement, resource_stream
+from urllib.parse import parse_qs
+from pkg_resources import resource_stream
+
+import xdg.BaseDirectory
 import yattag
 
 
@@ -70,7 +70,7 @@ class VolumeService(Service):
             self.adjust(data[b'action'][0].decode())
 
     def mute(self):
-        subprocess.call(["amixer", "-D", "pulse", "set", "Master",  "1+", "toggle"])
+        subprocess.call(["amixer", "-D", "pulse", "set", "Master", "1+", "toggle"])
 
     def adjust(self, value):
         subprocess.call(["amixer", "-D", "pulse", "set", "Master", value])
@@ -97,6 +97,7 @@ class VolumeService(Service):
       </form>
     </div>
   </section>""")
+
 
 class GammaService(Service):
 
@@ -141,6 +142,7 @@ class GammaService(Service):
     </form>
   </section>""")
 
+
 class WebService(Service):
 
     def do(self, handler, data):
@@ -167,7 +169,6 @@ class ScreenshotService(Service):
     def screenshot(self, handler):
         cmd = 'DISPLAY=:0 xwd -silent -root | convert "XWD:-" "PNG:-"'
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
-        pngdata = result.stdout
 
         def result_callback(pngdata, handler):
             handler.send_response(200)
@@ -175,11 +176,10 @@ class ScreenshotService(Service):
             handler.end_headers()
             handler.wfile.write(pngdata)
 
-        return lambda handler, pngdata=pngdata: result_callback(pngdata, handler)
+        return lambda handler, pngdata=result.stdout: result_callback(pngdata, handler)
 
     def html(self, doc):
-        doc.asis(
-"""<section>
+        doc.asis("""<section>
     <h2>Screenshot</h2>
     <form action="/service/screenshot" method="post">
       <button type="submit" name="action" value="screenshot">Screenshot</button>
@@ -190,7 +190,7 @@ class ScreenshotService(Service):
 class KeyboardService(Service):
 
     def do(self, handler, data):
-        if (data[b'action'][0] == b'press'):
+        if data[b'action'][0] == b'press':
             self.press(data[b'key'][0].decode())
         else:
             print("Unknown action: {}".format(data[b'action'][0]))
@@ -201,6 +201,14 @@ class KeyboardService(Service):
 
     def html(self, doc):
         _, tag, text = doc.tagtext()
+
+        keys = [
+            ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"],
+            ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ["minus", "-"], ["equal", "="]],
+            ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", ["bracketleft", "["], ["bracketright", "]"]],
+            ["a", "s", "d", "f", "g", "h", "j", "k", "l", ["semicolon", ";"], ["apostrophe", "'"]],
+            ["z", "x", "c", "v", "b", "n", "m", ["comma", ","], ["period", "."], ["slash", "/"], ["backslash", "\\"]],
+        ]
 
         def btn(label, key):
             with tag("form", action="/service/keyboard", method="post", target="frame"):
@@ -227,14 +235,6 @@ class KeyboardService(Service):
 
             # Full keyboard
             with tag('section'):
-                keys = [
-                    ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"],
-                    ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ["minus", "-"], ["equal", "="]],
-                    ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", ["bracketleft", "["], ["bracketright", "]"]],
-                    ["a", "s", "d", "f", "g", "h", "j", "k", "l", ["semicolon", ";"], ["apostrophe", "'"]],
-                    ["z", "x", "c", "v", "b", "n", "m", ["comma", ","], ["period", "."], ["slash", "/"], ["backslash", "\\"]],
-                ]
-
                 def make_key(label, key):
                     with tag("form", action="/service/keyboard", method="post", target="frame"):
                         with tag("button", klass="keyboardbutton", type="submit", name="action", value="press"):
@@ -355,9 +355,9 @@ def parse_args(argv):
 
     auth = parser.add_mutually_exclusive_group(required=True)
     auth.add_argument("--no-auth", action='store_true', default=False,
-                        help="Disable authentification")
+                      help="Disable authentification")
     auth.add_argument("-a", "--auth", metavar="USER:PASSWORD", type=str, default=None,
-                        help="Require USER and PASSWORD to access the htmlremote website")
+                      help="Require USER and PASSWORD to access the htmlremote website")
 
     return parser.parse_args(argv)
 
@@ -367,16 +367,18 @@ def make_html(services):
 
     doc.asis("<!doctype html>")
     with tag("head"):
-        with tag("title"): text("HTMLRemote")
+        with tag("title"):
+            text("HTMLRemote")
         doc.stag("link", href="default.css", rel="stylesheet", type="text/css")
         doc.stag("meta", charset="utf-8")
         # prevent zoom on mobile devices, thus making it easier to press
         # buttons multiple times without accidentally triggering a zoom
         doc.stag("meta", name="viewport",
                  content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0")
-        with tag("script", type="text/javascript", src="script.js"): pass
+        with tag("script", type="text/javascript", src="script.js"):
+            pass
 
-    for name, service in services.items():
+    for _, service in services.items():
         service.html(doc)
 
     with tag("iframe", name="frame"):
@@ -405,7 +407,7 @@ def main(argv):
     }
 
     print("Server listening on {}:{}".format(hostname, port))
-    for key, value in services.items():
+    for key, _ in services.items():
         print("  {}".format(key))
 
     httpd = HTTPServer((hostname, port), lambda *args: MyHandler(services, auth_token, *args))

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # HTML-based remote control
 # Copyright (C) 2017 Ingo Ruhnke <grumbel@gmail.com>
 #
