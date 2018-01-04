@@ -28,6 +28,7 @@ htmlremote makes use of numerous command line applications to accive
 it's functionality.
 
 * OpenSSL
+* yattag
 * xdotool
 * xwd
 * covert
