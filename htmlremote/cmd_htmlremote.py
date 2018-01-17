@@ -268,7 +268,13 @@ class MyHandler(BaseHTTPRequestHandler):
     def __init__(self, services, auth_token, *args):
         self.services = services
         self.auth_token = auth_token
-        super().__init__(*args)
+        try:
+            super().__init__(*args)
+        except ssl.SSLError as err:
+            if err.library == "SSL" and err.reason == "TLSV1_ALERT_UNKNOWN_CA":
+                print("ignoring {}".format(err))
+            else:
+                raise
 
     def do_HEAD(self):
         self.send_response(200)
